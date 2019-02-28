@@ -18,6 +18,41 @@ class DbDoc(object):
     <html>
     <head>
     <meta charset='utf-8'>
+    <style>
+    td,th {
+      text-align:left;
+      vertical-align:middle;
+    }
+    table {
+      border-collapse: collapse;
+	  min-width: 1024px;
+	  margin-left: auto;
+	  margin-right: auto;
+    }
+    caption, th, td {
+      padding: .2em .8em;
+      border: 1px solid #fff;
+    }
+    caption {
+      background: #dbb768;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    th {
+      font-weight: bold;
+      background: #f3ce7d;
+    }
+    td {
+      background: #ffea97;
+    }
+    .menus:before {
+        content: ".";
+        width: 2.2em;
+        height: 2.2em;
+        background: black;
+        display: block;
+    }
+    </style>
     """
     
     def_bottom_html = """
