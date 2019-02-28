@@ -1,47 +1,86 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+    dbdoc
+    ~~~~~
+
+    A simple database doc with one html file.
+
+    :copyright: &copy; 2019 by the Feng pengbin.
+    :license:  Apache License 2.0
+"""
+__version__ = '0.0.dev'
 from sqlalchemy import create_engine, inspect
+
 class DbDoc(object):
-    def_top_html = ""
-    def_bottom_html = ""
+    def_top_html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset='utf-8'>
+    """
+    
+    def_bottom_html = """
+    </body></html>
+    """
+    
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.db_uri = kwargs['db_uri']
-        self.engine = create_engine(self.db_uri)
+        self.engine = create_engine(self.db_uri, encoding="utf8")
         self.inspector = inspect(self.engine)
         self.schema_name = self.inspector.default_schema_name
+        self.doc_file = "%s.doc.html" % (self.schema_name)
         self.tables = self.get_tables()
-        self.content = []
+        self.doc_content = []
+    
     def write_content(self, content):
-        self.content.append(content)
-        print(content, file=self.doc_file)
+        self.doc_content.append(content)
+    
     def get_tables(self):
         return self.inspector.get_table_names()
+    
     def get_columns(self, table_name):
         return self.inspector.get_columns(table_name)
+    
     def get_table_name(self, table):
         return table
+    
     def get_table_comment(self, table):
-        return self.inspector.get_table_comment(self.get_table_name(table))
+        comment = self.inspector.get_table_comment(self.get_table_name(table))
+        if comment and not isinstance(comment, str):
+            return comment['text']
+        else:
+            return comment
     def get_column_name(self, column):
         return column['name']
+    
     def get_column_type(self, column):
         return column['type']
+    
     def get_column_comment(self, column):
-        return column['comment']
+        comment = column['comment']
+        if comment and not isinstance(comment, str):
+            return comment['text']
+        else:
+            return comment
+    
     def build_top(self):
-        return ""
+        return "<title>%s</title></head><body>" % (self.schema_name)
+    
     def build_menus(self):
         menus_html = []
-        menus_html.append("<dl class='menus>")
+        menus_html.append("<dl class='menus'>")
         for t in self.tables:
             table_name = self.get_table_name(t)
             menus_html.append("<dt><a href='#%s'>%s</a></dt><dd>%s</dd>" % (table_name, table_name, self.get_table_comment(t)))
         menus_html.append("</dl>")
         return "".join(menus_html)
+    
     def build_table(self, table):
         table_name = self.get_table_name(table)
         table_html = []
-        table_html.append("<table id='%s'>" %(table_name))
-        table_html.append("<caption>%s -> %s</caption>" % (table_name, self.get_table_comment(table)))
+        table_html.append("<div class='table'><table id='%s'>" %(table_name))
+        table_html.append("<caption>%s = %s</caption>" % (table_name, self.get_table_comment(table)))
         table_html.append("<thead>")
         table_html.append("<tr><th colspan='3'>Columns</th></tr>")
         # TODO PK FK Default
@@ -51,7 +90,7 @@ class DbDoc(object):
         for column in self.get_columns(table_name):
             table_html.append("<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (self.get_column_name(column), self.get_column_type(column), self.get_column_comment(column)))
         table_html.append("</tbody>")
-        table_html.append("</table>")
+        table_html.append("</table></div>")
         return "".join(table_html)
     
     def build_body(self):
@@ -62,10 +101,16 @@ class DbDoc(object):
     def build_bottom(self):
         return ""
 
-    def save_doc(self):
+    def build(self):
         self.write_content(self.def_top_html)
         self.write_content(self.build_top())
-        self.write_content(self.bulid_menus())
+        self.write_content(self.build_menus())
         self.write_content(self.build_body())
         self.write_content(self.build_bottom())
         self.write_content(self.def_bottom_html)
+
+    def save(self):
+        self.build()
+        with open(self.doc_file,"w", encoding="utf8") as file:
+            print("".join(self.doc_content), file=file)
+        
