@@ -127,7 +127,7 @@ class DbDoc(object):
         bottom.append("<a href='#%s' class='go_top'></a>" % (self.schema_name))
         bottom.append("<footer>")
         bottom.append(
-            "<p>Build by <a href='https://github.com/faeli/dbdoc' target='_black'>dbdoc</a> on %s</p>" % (self.date_now))
+            "<p>Build by <a href='https://github.com/faeli/dbdoc' target='_black'>DBDoc</a> on %s</p>" % (self.date_now))
         bottom.append("</footer>")
         return "".join(bottom)
 
