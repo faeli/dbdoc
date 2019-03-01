@@ -39,6 +39,9 @@ class DbDoc(object):
         self.schema_name = self.inspector.default_schema_name
         self.doc_file = "%s.doc.html" % (self.schema_name)
         self.tables = self.get_tables()
+        if self.tables and len(self.tables)>0:
+            self.first_table = self.tables[0]
+            self.last_table = self.tables[-1]
         self.doc_content = []
     
     def write_content(self, content):
@@ -77,7 +80,7 @@ class DbDoc(object):
     
     def build_menus(self):
         menus_html = []
-        menus_html.append("<div class='menus'><dl>")
+        menus_html.append("<div id='menus' class='menus'><dl>")
         for t in self.tables:
             table_name = self.get_table_name(t)
             menus_html.append("<dt><a href='#%s'>%s</a></dt><dd>%s</dd>" % (table_name, table_name, self.get_table_comment(t)))
@@ -107,7 +110,7 @@ class DbDoc(object):
             body.append(self.build_table(t))
         return "".join(body)
     def build_bottom(self):
-        return "<button class='go_top'></button>"
+        return "<a href='#%s' class='go_top'></a>" % (self.get_table_name(self.first_table))
 
     def build(self):
         self.write_content(self.def_top_html)
