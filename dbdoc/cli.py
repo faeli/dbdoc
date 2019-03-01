@@ -3,6 +3,7 @@
 import sys
 from dbdoc import DbDoc
 
+
 def main():
     args = sys.argv[1:]
     if len(args) == 1:
@@ -24,6 +25,7 @@ def main():
         print("  dbdoc sqlite:////absolute/path/to/foo.db")
         print("")
         print("")
+
 
 if __name__ == '__main__':
     main()

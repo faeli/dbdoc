@@ -2,15 +2,17 @@
 # -*- coding: utf-8 -*-
 import io
 import re
+from os import path
 from collections import OrderedDict
 
 from setuptools import setup
-
-with io.open('dbdoc/__init__.py', 'rt', encoding='utf8') as f:
+this_dir = path.abspath(path.dirname(__file__))
+with open(path.join(this_dir, 'dbdoc/__init__.py'), 'rt', encoding='utf8') as f:
     version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
-
+with open(path.join(this_dir, 'README.md'), encoding='utf8') as f:
+    long_description = f.read()
 setup(
-    name='dbdoc',
+    name='DBDoc',
     version=version,
     url='https://github.com/faeli/dbdoc',
     project_urls=OrderedDict((
@@ -24,6 +26,8 @@ setup(
     maintainer='Feng pengbin',
     maintainer_email='fengpengbin@live.cn',
     description='A simple database doc with one html file',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=['dbdoc'],
     include_package_data=True,
     zip_safe=False,
@@ -32,7 +36,7 @@ setup(
     python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*',
     install_requires=[
         'SQLAlchemy>=1.2'
-    ], 
+    ],
     entry_points={
         'console_scripts': [
             'dbdoc = dbdoc.cli:main',
