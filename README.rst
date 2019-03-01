@@ -15,7 +15,7 @@ Install and update using `pip`_:
 A Simple Example
 ----------------
 
-.. code_block:: bash
+.. code_block:: text
     
     dbdoc mysql+pymysql://root:root@127.0.0.1:3306/testing
 
