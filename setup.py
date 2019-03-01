@@ -9,7 +9,7 @@ from setuptools import setup
 this_dir = path.abspath(path.dirname(__file__))
 with open(path.join(this_dir, 'dbdoc/__init__.py'), 'rt', encoding='utf8') as f:
     version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
-with open(path.join(this_dir, 'README.md'), encoding='utf8') as f:
+with open(path.join(this_dir, 'README.rst'), encoding='utf8') as f:
     long_description = f.read()
 setup(
     name='DBDoc',
@@ -27,7 +27,6 @@ setup(
     maintainer_email='fengpengbin@live.cn',
     description='A simple database doc with one html file',
     long_description=long_description,
-    long_description_content_type='text/markdown',
     packages=['dbdoc'],
     include_package_data=True,
     zip_safe=False,

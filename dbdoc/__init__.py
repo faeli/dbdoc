@@ -9,7 +9,7 @@
     :copyright: &copy; 2019 by the faeli.
     :license:  Apache License 2.0
 """
-__version__ = '0.0.dev'
+__version__ = '0.1.dev'
 
 import os
 import datetime
