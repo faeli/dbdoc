@@ -10,7 +10,12 @@
     :license:  Apache License 2.0
 """
 __version__ = '0.0.dev'
+
+import os
 from sqlalchemy import create_engine, inspect
+
+with open(os.path.dirname(os.path.abspath(__file__))+'/style.css', 'r') as f:
+    style = f.read()
 
 class DbDoc(object):
     def_top_html = """
@@ -19,41 +24,9 @@ class DbDoc(object):
     <head>
     <meta charset='utf-8'>
     <style>
-    td,th {
-      text-align:left;
-      vertical-align:middle;
-    }
-    table {
-      border-collapse: collapse;
-	  min-width: 1024px;
-	  margin-left: auto;
-	  margin-right: auto;
-    }
-    caption, th, td {
-      padding: .2em .8em;
-      border: 1px solid #fff;
-    }
-    caption {
-      background: #dbb768;
-      font-weight: bold;
-      font-size: 1.1em;
-    }
-    th {
-      font-weight: bold;
-      background: #f3ce7d;
-    }
-    td {
-      background: #ffea97;
-    }
-    .menus:before {
-        content: ".";
-        width: 2.2em;
-        height: 2.2em;
-        background: black;
-        display: block;
-    }
+    {style}
     </style>
-    """
+    """.format(style=style)
     
     def_bottom_html = """
     </body></html>
@@ -104,11 +77,11 @@ class DbDoc(object):
     
     def build_menus(self):
         menus_html = []
-        menus_html.append("<dl class='menus'>")
+        menus_html.append("<div class='menus'><dl>")
         for t in self.tables:
             table_name = self.get_table_name(t)
             menus_html.append("<dt><a href='#%s'>%s</a></dt><dd>%s</dd>" % (table_name, table_name, self.get_table_comment(t)))
-        menus_html.append("</dl>")
+        menus_html.append("</dl></div>")
         return "".join(menus_html)
     
     def build_table(self, table):
@@ -119,7 +92,7 @@ class DbDoc(object):
         table_html.append("<thead>")
         table_html.append("<tr><th colspan='3'>Columns</th></tr>")
         # TODO PK FK Default
-        table_html.append("<tr><th>Name</th><th>Type</th><th>Comment</th></tr>")
+        table_html.append("<tr><th class='name'>Name</th><th class='type'>Type</th><th class='comment'>Comment</th></tr>")
         table_html.append("</thead>")
         table_html.append("<tbody>")
         for column in self.get_columns(table_name):
@@ -134,7 +107,7 @@ class DbDoc(object):
             body.append(self.build_table(t))
         return "".join(body)
     def build_bottom(self):
-        return ""
+        return "<button class='go_top'></button>"
 
     def build(self):
         self.write_content(self.def_top_html)
