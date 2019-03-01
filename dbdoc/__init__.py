@@ -12,6 +12,7 @@
 __version__ = '0.0.dev'
 
 import os
+import datetime
 from sqlalchemy import create_engine, inspect
 
 with open(os.path.dirname(os.path.abspath(__file__))+'/style.css', 'r') as f:
@@ -43,7 +44,7 @@ class DbDoc(object):
             self.first_table = self.tables[0]
             self.last_table = self.tables[-1]
         self.doc_content = []
-    
+        self.date_now = datetime.datetime.now()
     def write_content(self, content):
         self.doc_content.append(content)
     
@@ -76,7 +77,10 @@ class DbDoc(object):
             return comment
     
     def build_top(self):
-        return "<title>%s</title></head><body>" % (self.schema_name)
+        top = []
+        top.append("<title>%s</title></head><body>" % (self.schema_name))
+        top.append("<header><h1 id='%s'>%s</h1><p><label class='date'><small>%s</small></label></p></header>" % (self.schema_name, self.schema_name, self.date_now))
+        return "".join(top)
     
     def build_menus(self):
         menus_html = []
@@ -110,7 +114,12 @@ class DbDoc(object):
             body.append(self.build_table(t))
         return "".join(body)
     def build_bottom(self):
-        return "<a href='#%s' class='go_top'></a>" % (self.get_table_name(self.first_table))
+        bottom = []
+        bottom.append("<a href='#%s' class='go_top'></a>" % (self.schema_name))
+        bottom.append("<footer>")
+        bottom.append("<p>Build by <a href='https://github.com/faeli/dbdoc' target='_black'>dbdoc</a> on %s</p>" % (self.date_now))
+        bottom.append("</footer>")
+        return "".join(bottom)
 
     def build(self):
         self.write_content(self.def_top_html)
