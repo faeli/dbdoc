@@ -133,4 +133,5 @@ class DbDoc(object):
         self.build()
         with open(self.doc_file,"w", encoding="utf8") as file:
             print("".join(self.doc_content), file=file)
+            return self.doc_file
         

@@ -31,7 +31,11 @@ setup(
     platforms='any',
     python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*',
     install_requires=[
-        'SQLAlchemy>=1.2',
-        'click>=5.1',
-    ],
+        'SQLAlchemy>=1.2'
+    ], 
+    entry_points={
+        'console_scripts': [
+            'dbdoc = dbdoc.cli:main',
+        ],
+    }
 )
